@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import { Network } from "vis-network";
 
-export default function graph() {
+export default function Graph() {
 
   const nodes = [
     { id: 1, label: "Node 1" },
