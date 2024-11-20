@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Network } from "vis-network";
 
 export default function graph() {
@@ -21,22 +21,19 @@ export default function graph() {
 
   const options = {}
 
-  const networkRef = useRef<HTMLDivElement>(null);
+  const NetworkRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const network =
-      networkRef.current &&
-      new Network(networkRef.current, { nodes, edges }, options || {});
-
-      // network && network.setSize(`${800}px`, `${1200}px`);
-
-    // Use `network` here to configure events, etc
-  }, [networkRef, nodes, edges]);
+      NetworkRef.current &&
+      new Network(NetworkRef.current, { nodes, edges }, options || {});
+      console.log(network)
+  }, [NetworkRef, nodes, edges]);
 
 
   return (
     <div className="p-10">
       <h1 className="text-xl">Graphs page</h1>
-      <div id="mynetwork" style={{backgroundColor:'white', height: '50vh'}} ref={networkRef}></div>
+      <div id="mynetwork" style={{backgroundColor:'white', height: '50vh'}} ref={NetworkRef}></div>
     </div>
   );
 }
