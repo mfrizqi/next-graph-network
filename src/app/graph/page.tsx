@@ -9,15 +9,15 @@ export default function Graph() {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZma3Z1bW9tcmhhYmd3YnJ2YmxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIyMTY1NjQsImV4cCI6MjA0Nzc5MjU2NH0.G5Y-c7j8TCHCPd25Cat_YquvD9RU_JaJPgMKHhmThJA'
   }
 
-  const [networks, SetNetworks] = useState<any>({})
+  // const [networks, SetNetworks] = useState<any>({})
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  var clusterIndex = 0;
-  var clusters: any = [];
-  var lastClusterZoomLevel = 0;
-  var clusterFactor = 0.9;
+  let clusterIndex: number = 0;
+  let clusters: any = [];
+  let lastClusterZoomLevel: number = 0;
+  let clusterFactor: number = 0.9;
 
   const options = {
     nodes: {
@@ -95,7 +95,7 @@ export default function Graph() {
       NetworkRef.current &&
       new Network(NetworkRef.current, { nodes, edges }, options || {});
 
-    SetNetworks(network)
+    // SetNetworks(network)`
 
     network?.once("initRedraw", function () {
       if (lastClusterZoomLevel === 0) {
@@ -176,12 +176,10 @@ export default function Graph() {
 
     function openClusters(scale: any) {
       var newClusters = [];
-      var declustered = false;
       for (var i = 0; i < clusters.length; i++) {
         if (clusters[i].scale < scale) {
           network?.openCluster(clusters[i].id);
           lastClusterZoomLevel = scale;
-          declustered = true;
         } else {
           newClusters.push(clusters[i]);
         }
