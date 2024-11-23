@@ -17,7 +17,7 @@ export default function Graph() {
   let clusterIndex: number = 0;
   let clusters: any = [];
   let lastClusterZoomLevel: number = 0;
-  let clusterFactor: number = 0.9;
+  const clusterFactor: number = 0.9;
 
   const options = {
     nodes: {
@@ -150,11 +150,11 @@ export default function Graph() {
     // }
 
     function makeClusters(scale: any) {
-      var clusterOptionsByData = {
+      let clusterOptionsByData = {
         processProperties: function (clusterOptions: any, childNodes: any) {
           clusterIndex = clusterIndex + 1;
-          var childrenCount = 0;
-          for (var i = 0; i < childNodes.length; i++) {
+          let childrenCount = 0;
+          for (let i = 0; i < childNodes.length; i++) {
             childrenCount += childNodes[i].childrenCount || 1;
           }
           clusterOptions.childrenCount = childrenCount;
@@ -175,8 +175,8 @@ export default function Graph() {
     }
 
     function openClusters(scale: any) {
-      var newClusters = [];
-      for (var i = 0; i < clusters.length; i++) {
+      let newClusters = [];
+      for (let i = 0; i < clusters.length; i++) {
         if (clusters[i].scale < scale) {
           network?.openCluster(clusters[i].id);
           lastClusterZoomLevel = scale;
