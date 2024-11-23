@@ -150,7 +150,7 @@ export default function Graph() {
     // }
 
     function makeClusters(scale: any) {
-      let clusterOptionsByData = {
+      const clusterOptionsByData = {
         processProperties: function (clusterOptions: any, childNodes: any) {
           clusterIndex = clusterIndex + 1;
           let childrenCount = 0;
@@ -175,7 +175,7 @@ export default function Graph() {
     }
 
     function openClusters(scale: any) {
-      let newClusters = [];
+      const newClusters = [];
       for (let i = 0; i < clusters.length; i++) {
         if (clusters[i].scale < scale) {
           network?.openCluster(clusters[i].id);
