@@ -110,7 +110,7 @@ export default function Graph() {
         "click event, getNodeAt returns: "
       );
       console.log(network.getNodeAt(params.pointer.DOM))
-      document.getElementById('modal_box')!.showModal()
+      (document.getElementById('modal_box') as HTMLInputElement)?.showModal()
 
     });
 
