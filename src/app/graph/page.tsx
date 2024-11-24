@@ -28,36 +28,21 @@ export default function Graph() {
       },
       font: '12px arial white'
     },
-    physics: { stabilization: { fit: false } }
-    // manipulation: {
-    //   addNode: function (data: any, callback: any) {
-    //     // filling in the popup DOM elements
-    //     document.getElementById("node-operation").innerText = "Add Node";
-    //     editNode(data, clearNodePopUp, callback);
-    //   },
-    //   editNode: function (data: any, callback: any) {
-    //     // filling in the popup DOM elements
-    //     document.getElementById("node-operation").innerText = "Edit Node";
-    //     editNode(data, cancelNodeEdit, callback);
-    //   },
-    //   addEdge: function (data: any, callback: any) {
-    //     if (data.from == data.to) {
-    //       var r = confirm("Do you want to connect the node to itself?");
-    //       if (r != true) {
-    //         callback(null);
-    //         return;
-    //       }
-    //     }
-    //     document.getElementById("edge-operation").innerText = "Add Edge";
-    //     editEdgeWithoutDrag(data, callback);
-    //   },
-    //   editEdge: {
-    //     editWithoutDrag: function (data: any, callback: any) {
-    //       document.getElementById("edge-operation").innerText = "Edit Edge";
-    //       editEdgeWithoutDrag(data, callback);
-    //     },
-    //   },
-    // },
+    physics: {
+      stabilization: { fit: false },
+      adaptiveTimestep: false
+    },
+    layout: { randomSeed: 13 },
+    groups: {
+      gateway: {
+        color: { background: "red", border: "white" },
+        shape: "diamond",
+      },
+      vpn: {
+        shape: "dot",
+        color: "cyan",
+      },
+    }
   }
 
   const NetworkRef = useRef<HTMLDivElement>(null);
