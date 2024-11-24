@@ -42,7 +42,15 @@ export default function Graph() {
         shape: "dot",
         color: "cyan",
       },
-    }
+    },
+    // edges: {
+    //   smooth: {
+    //     enabled: true,
+    //     type: "discrete",
+    //     // forceDirection: "none",
+    //     // roundness: 1
+    //   }
+    // }
   }
 
   const NetworkRef = useRef<HTMLDivElement>(null);
