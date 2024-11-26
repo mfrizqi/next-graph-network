@@ -151,17 +151,17 @@ export default function Graph() {
 
     function getNode(nodeId: number) {
       // Accessing deep into network body to get node
-      let nodeObj = (network as any)?.body.nodes[nodeId]
+      const nodeObj = (network as any)?.body.nodes[nodeId]
       return nodeObj; //nodeObj.label to get label 
     }
 
   }, [NetworkRef, nodes, edges]);
 
   function adjustTitleData(data: any) {
-    let newNodes = data.map((node: any) => {
-      let titlePopup = document.createElement("div");
-      let titleLabel = document.createElement("div");
-      let titleValue = document.createElement("div");
+    const newNodes = data.map((node: any) => {
+      const titlePopup = document.createElement("div");
+      const titleLabel = document.createElement("div");
+      const titleValue = document.createElement("div");
       titleLabel.innerHTML = node?.title;
       titleValue.innerHTML = 'IPv4: ' + node?.IPv4;
 
