@@ -19,3 +19,124 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Vis Network Overriden style */
+
+
+/* .vis-network{overflow:visible;} */
+div.vis-tooltip {
+  position: absolute;
+  visibility: hidden;
+  padding: 5px;
+  white-space: nowrap;
+  font-family: verdana;
+  font-size: 14px;
+  color: #000;
+  background-color: #f5f4ed;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 16px;
+  border: 1px solid #808074;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, .2);
+  pointer-events: none;
+  z-index: 5;
+  overflow:visible;
+}
+
+div.vis-network div.vis-manipulation {
+  box-sizing: content-box;
+  border-width: 0;
+  border-bottom: 1px;
+  border-style: solid;
+  border-color: #d6d9d800;
+  background: #ffffff00 !important;
+  background: -moz-linear-gradient(top, #fff 0, #fcfcfc 48%, #fafafa 50%, #fcfcfc 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(48%, #fcfcfc), color-stop(50%, #fafafa), color-stop(100%, #fcfcfc));
+  background: -webkit-linear-gradient(top, #fff 0, #fcfcfc 48%, #fafafa 50%, #fcfcfc 100%);
+  background: -o-linear-gradient(top, #fff 0, #fcfcfc 48%, #fafafa 50%, #fcfcfc 100%);
+  background: -ms-linear-gradient(top, #fff 0, #fcfcfc 48%, #fafafa 50%, #fcfcfc 100%);
+  background: linear-gradient(to bottom, #fff 0, #fcfcfc 48%, #fafafa 50%, #fcfcfc 100%);
+  padding-top: 4px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 28px;
+}
+
+/* div.vis-network div.vis-navigation div.vis-button.vis-up,
+div.vis-network div.vis-navigation div.vis-button.vis-down,
+div.vis-network div.vis-navigation div.vis-button.vis-left,
+div.vis-network div.vis-navigation div.vis-button.vis-right,
+div.vis-network div.vis-navigation div.vis-button.vis-zoomIn,
+div.vis-network div.vis-navigation div.vis-button.vis-zoomOut,
+div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+  background-image: none !important;
+}
+
+div.vis-navigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+div.vis-network div.vis-navigation div.vis-button:hover {
+  box-shadow: none !important;
+}
+
+.vis-button:after {
+  font-size: 2em;
+  color: gray;
+}
+
+.vis-button:hover:after {
+  font-size: 2em;
+  color: lightgray;
+} */
+
+/* .vis-button.vis-up:after {
+  content: "▲";
+}
+
+.vis-button.vis-down:after {
+  content: "▼";
+}
+
+.vis-button.vis-left:after {
+  content: "◀";
+}
+
+.vis-button.vis-right:after {
+  content: "▶";
+} */
+
+/* .vis-button.vis-zoomIn:after {
+  content: "+";
+  font-weight: bold;
+}
+
+.vis-button.vis-zoomOut:after {
+  content: "−";
+  font-weight: bold;
+}
+
+.vis-button.vis-zoomExtends:after {
+  content: "⤧";
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
+  top: 10px !important;
+  right: -140px !important;
+  bottom: 0 !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
+  top: 10px !important;
+  right: -110px !important;
+  bottom: 0 !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+  top: 10px;
+  right: -175px;
+} */

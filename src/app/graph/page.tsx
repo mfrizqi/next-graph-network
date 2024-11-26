@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Network } from "vis-network";
 
+import graphOptions from "./graphOption";
+
 export default function Graph() {
 
   const db = {
@@ -9,53 +11,33 @@ export default function Graph() {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZma3Z1bW9tcmhhYmd3YnJ2YmxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIyMTY1NjQsImV4cCI6MjA0Nzc5MjU2NH0.G5Y-c7j8TCHCPd25Cat_YquvD9RU_JaJPgMKHhmThJA'
   }
 
-  // const [networks, SetNetworks] = useState<any>({})
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
+  const [selectedNode, setSelectedNode] = useState({})
+
+  const [modal, setModal] = useState({
+    type: 'add',
+    button: 'Submit'
+  })
+
   const [isLoading, setIsLoading] = useState(true)
+  const [notification, setNotification] = useState<any>({
+    message: 'Messdage',
+    status: 'alert-info',
+    show: false
+  })
 
   let clusterIndex: number = 0;
   let clusters: any = [];
   let lastClusterZoomLevel: number = 0;
   const clusterFactor: number = 0.9;
 
-  const options = {
-    nodes: {
-      shape: "dot",
-      scaling: {
-        min: 1,
-        max: 1
-      },
-      font: '12px arial white'
-    },
-    physics: {
-      stabilization: { fit: false },
-      adaptiveTimestep: false
-    },
-    layout: { randomSeed: 13 },
-    groups: {
-      gateway: {
-        color: { background: "red", border: "white" },
-        shape: "diamond",
-      },
-      vpn: {
-        shape: "dot",
-        color: "cyan",
-      },
-    },
-    // edges: {
-    //   smooth: {
-    //     enabled: true,
-    //     type: "discrete",
-    //     // forceDirection: "none",
-    //     // roundness: 1
-    //   }
-    // }
-  }
+  const options = graphOptions;
 
   const NetworkRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (nodes.length === 0) {
+      // Fetch init data Nodes & Edges
       fetch(db.baseUrl + '/rest/v1/networks', {
         method: 'GET',
         headers: {
@@ -66,7 +48,7 @@ export default function Graph() {
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
-          setNodes(data)
+          adjustTitleData(data)
           setIsLoading(false)
         })
 
@@ -88,8 +70,6 @@ export default function Graph() {
       NetworkRef.current &&
       new Network(NetworkRef.current, { nodes, edges }, options || {});
 
-    // SetNetworks(network)`
-
     network?.once("initRedraw", function () {
       if (lastClusterZoomLevel === 0) {
         lastClusterZoomLevel = network?.getScale();
@@ -97,16 +77,25 @@ export default function Graph() {
     });
 
     network?.on("click", function (params) {
-      // console.log(params)
-      params.event = "[original event]";
-      console.log(
-        "click event, getNodeAt returns: "
-      );
-      // console.log(network.getNodeAt(params.pointer.DOM))
-      (document.getElementById('modal_box') as any)?.showModal()
-
+      console.log(params)
+      
+      // params.event = "[original event]";
+      console.log(network.getNodeAt(params.pointer.DOM))
+      // consolFe.log(network.getEdgeAt(params.pointer.DOM))
+      if (params?.nodes?.length > 0) {
+        let node = params.nodes[0]
+        if (typeof node === 'number') {
+          let selected = getNode(node);
+          console.log(selected)
+          setSelectedNode(selected);
+          (document.getElementById('modal_box') as any)?.showModal()
+        }
+      }
     });
 
+    network?.on("hoverNode", function (params) {
+      // console.log("hoverNode Event:", params);
+    });
 
     network?.on("zoom", function (params) {
       console.log('zoomin in/out')
@@ -119,28 +108,6 @@ export default function Graph() {
         openClusters(params.scale);
       }
     });
-
-    // // if we click on a node, we want to open it up!
-    // network?.on("selectNode", function (params) {
-    //   if (params.nodes.length == 1) {
-    //     if (network.isCluster(params.nodes[0]) == true) {
-    //       network.openCluster(params.nodes[0]);
-    //     }
-    //   }
-    // });
-
-    // network?.enableEditMode()
-    // network?.addNodeMode()
-
-    // console.log('=== Check id ===')
-    // console.log(nodes.find((el:any)=>{return el.id === 99}))
-
-    // if (!nodes.find((el: any) => { return el.id === 99 })) {
-    //   setNodes([ // with a new array
-    //     ...nodes, // that contains all the old items
-    //     { id: 99, label: 'NewNode' } // and one new item at the end
-    //   ])
-    // }
 
     function makeClusters(scale: any) {
       const clusterOptionsByData = {
@@ -182,39 +149,62 @@ export default function Graph() {
       network?.stabilize();
     }
 
+    function getNode(nodeId: number) {
+      // Accessing deep into network body to get node
+      var nodeObj = network?.body.nodes[nodeId]
+      return nodeObj; //nodeObj.label to get label 
+    }
+
   }, [NetworkRef, nodes, edges]);
 
-  function addNode() {
+  function adjustTitleData(data: any) {
+    let newNodes = data.map((node: any) => {
+      var titlePopup = document.createElement("div");
+      var titleLabel = document.createElement("div");
+      var titleValue = document.createElement("div");
+      titleLabel.innerHTML = node?.title;
+      titleValue.innerHTML = 'IPv4: ' + node?.IPv4;
 
+      titlePopup.appendChild(titleLabel)
+      titlePopup.appendChild(titleValue)
+
+      return {
+        ...node,
+        title: titlePopup
+      }
+    })
+    setNodes(newNodes);
   }
-
-
 
   return (
     <>
       <div className="p-10">
         <h1 className="text-xl">Graphs page</h1>
         {/* Toast Component */}
-        <div className="toast toast-top toast-end">
-          <div className="alert alert-info">
-            <span>New message arrived.</span>
-          </div>
-        </div>
+        {notification.show ? (
+          <div className="toast toast-top toast-end z-10">
+            <div className={`alert ${notification.status}`}>
+              <span>{notification.message}</span>
+            </div>
+          </div>) :
+          (<></>)
+        }
+
         {isLoading ? (
           <div className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center" style={{ height: '80vh' }}>Loading Nodes...</div>
         ) : (
           <div className="relative">
-            <div id="mynetwork" className="border-2 border-zinc-600 rounded-md" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
+            <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
             </div>
-            <div className="absolute left-2 top-3">Plus Minus</div>
+            {/* <div className="absolute left-2 top-3">Plus Minus</div> */}
           </div>
         )}
-        <button className="btn mt-4" onClick={addNode}>Add Node</button>
+        {/* <button className="btn mt-4" onClick={addNode}>Add Node</button> */}
       </div>
       {/* Modal Component */}
       <dialog id="modal_box" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
+          <h3 className="font-bold text-lg">Hello! {selectedNode?.options?.label}</h3>
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
           </form>
