@@ -83,9 +83,9 @@ export default function Graph() {
       console.log(network.getNodeAt(params.pointer.DOM))
       // consolFe.log(network.getEdgeAt(params.pointer.DOM))
       if (params?.nodes?.length > 0) {
-        let node = params.nodes[0]
+        const node = params.nodes[0]
         if (typeof node === 'number') {
-          let selected = getNode(node);
+          const selected = getNode(node);
           console.log(selected)
           setSelectedNode(selected);
           (document.getElementById('modal_box') as any)?.showModal()
