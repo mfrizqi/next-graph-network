@@ -13,16 +13,16 @@ export default function Graph() {
 
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
-  const [selectedNode, setSelectedNode] = useState({})
+  const [selectedNode, setSelectedNode] = useState<any>({})
 
-  const [modal, setModal] = useState({
-    type: 'add',
-    button: 'Submit'
-  })
+  // const [modal, setModal] = useState({
+  //   type: 'add',
+  //   button: 'Submit'
+  // })
 
   const [isLoading, setIsLoading] = useState(true)
   const [notification, setNotification] = useState<any>({
-    message: 'Messdage',
+    message: 'Message',
     status: 'alert-info',
     show: false
   })
@@ -93,9 +93,9 @@ export default function Graph() {
       }
     });
 
-    network?.on("hoverNode", function (params) {
-      // console.log("hoverNode Event:", params);
-    });
+    // network?.on("hoverNode", function (params) {
+    //   // console.log("hoverNode Event:", params);
+    // });
 
     network?.on("zoom", function (params) {
       console.log('zoomin in/out')
@@ -151,7 +151,7 @@ export default function Graph() {
 
     function getNode(nodeId: number) {
       // Accessing deep into network body to get node
-      var nodeObj = network?.body.nodes[nodeId]
+      let nodeObj = (network as any)?.body.nodes[nodeId]
       return nodeObj; //nodeObj.label to get label 
     }
 
@@ -159,9 +159,9 @@ export default function Graph() {
 
   function adjustTitleData(data: any) {
     let newNodes = data.map((node: any) => {
-      var titlePopup = document.createElement("div");
-      var titleLabel = document.createElement("div");
-      var titleValue = document.createElement("div");
+      let titlePopup = document.createElement("div");
+      let titleLabel = document.createElement("div");
+      let titleValue = document.createElement("div");
       titleLabel.innerHTML = node?.title;
       titleValue.innerHTML = 'IPv4: ' + node?.IPv4;
 
@@ -174,6 +174,7 @@ export default function Graph() {
       }
     })
     setNodes(newNodes);
+    setNotification({})
   }
 
   return (
