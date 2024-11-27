@@ -21,7 +21,7 @@ export default function Graph() {
     gateway: false,
     vpn: false
   });
-  const [selectedNode, setSelectedNode] = useState<any>({})
+  // const [selectedNode, setSelectedNode] = useState<any>({})
   const [nodeData, setNodeData] = useState<any>({})
 
   const [search, setSearch] = useState('');
@@ -247,10 +247,10 @@ export default function Graph() {
     networks?.redraw()
   }
 
-  function handleSubmit() {
-    setSelectedNode(nodeData)
-    setNodeData({})
-  }
+  // function handleSubmit() {
+  //   setSelectedNode(nodeData)
+  //   setNodeData({})
+  // }
 
   function openFullscreen() {
     const elem = document.documentElement as HTMLElement & {
