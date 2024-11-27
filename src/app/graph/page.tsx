@@ -123,7 +123,6 @@ export default function Graph() {
         if (typeof node === 'number') {
           const selected = getNode(node);
           console.log(selected)
-          // setSelectedNode(selected);
           setNodeData(selected);
           (document.getElementById('modal_box') as any)?.showModal()
         }
@@ -158,8 +157,9 @@ export default function Graph() {
           return clusterOptions;
         },
         clusterNodeProperties: {
-          borderWidth: 3,
+          borderWidth: 4,
           shape: "database",
+          color: "#b4b5b8",
           font: { size: 30 },
         },
       };
@@ -341,7 +341,7 @@ export default function Graph() {
       <div className="p-6 md:p-10">
         <div className="p-4 mb-4 bg-gray-200 w-full md:w-1/2 rounded-lg">
           <h1 className="text-xl font-semibold" style={{ color: '#6a39df' }}>Network Graph</h1>
-          <p className="text-slate-600">An overview network graph gateway & VPN</p>
+          <p className="text-slate-600">An overview network graph - Gateway & VPN</p>
         </div>
         {/* Toast Component */}
         {notification.show ? (

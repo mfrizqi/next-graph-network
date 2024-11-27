@@ -25,17 +25,22 @@ const graphOptions = {
   layout: { randomSeed: 20 },
   groups: {
     gateway: {
-      color: { background: "red", border: "white" },
+      color: { background: "#30d99b", border: "white" },
       shape: "diamond",
+      size: 35
     },
     vpn: {
       shape: "dot",
-      color: "cyan",
+      color: "#2555d9",
+      size: 20
     },
   },
   manipulation: {
     enabled: true,
   },
+  edges:{
+    width: 2
+  }
 }
 
 export default graphOptions;
