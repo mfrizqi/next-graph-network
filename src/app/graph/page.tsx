@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Network } from "vis-network";
 
 import graphOptions from "./graphOption";
+import useDebounce from './useDebounce';
 
 export default function Graph() {
 
@@ -16,6 +17,8 @@ export default function Graph() {
   const [edges, setEdges] = useState([])
   const [selectedNode, setSelectedNode] = useState<any>({})
   const [nodeData, setNodeData] = useState<any>({})
+
+  const [search, setSearch] = useState('');
 
   // const [modal, setModal] = useState({
   //   type: 'add',
@@ -90,6 +93,7 @@ export default function Graph() {
         if (typeof node === 'number') {
           const selected = getNode(node);
           setSelectedNode(selected);
+          console.log(selectedNode)
           setNodeData(selected);
           (document.getElementById('modal_box') as any)?.showModal()
         }
@@ -167,6 +171,29 @@ export default function Graph() {
 
   }, [NetworkRef, nodes, edges]);
 
+  useDebounce(() => {
+    const findNode = nodes.filter((node: any) => node.label.toLowerCase().includes(search.toLowerCase()))
+    const node = getNode(findNode[0]?.id)
+    const moveOption = {
+      position: { x: node?.x, y: node?.y },
+      scale: 1.5,
+      animation: {
+        duration: 500,
+        easingFunction: 'easeInOutQuad'
+      }
+    }
+    networks?.moveTo(moveOption)
+  }, [nodes, search], 800
+  );
+
+  function getNode(nodeId: number) {
+    // Accessing deep into network body to get node
+    const nodeObj = (networks as any)?.body.nodes[nodeId]
+    return nodeObj; //nodeObj.label to get label 
+  }
+
+  function handleSearch(e: any) { setSearch(e.target.value) };
+
   function adjustTitleData(data: any) {
     const newNodes = data.map((node: any) => {
       const titlePopup = document.createElement("div");
@@ -221,7 +248,7 @@ export default function Graph() {
   return (
     <>
       <div className="p-10">
-        <h1 className="text-xl">Graphs page</h1>
+        <h1 className="text-xl">Network Graph</h1>
         {/* Toast Component */}
         {notification.show ? (
           <div className="toast toast-top toast-end z-10">
@@ -235,7 +262,11 @@ export default function Graph() {
         {isLoading ? (
           <div className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center" style={{ height: '80vh' }}>Loading Nodes...</div>
         ) : (
-          <div className="relative">
+          <div className="relative my-4">
+            <label className="input input-bordered flex items-center gap-2 w-1/4 mb-4">
+              <input type="text" className="grow" placeholder="Search node" value={search || ''}
+                onChange={handleSearch} />
+            </label>
             <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
             </div>
             <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100" style={{ bottom: '8px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
