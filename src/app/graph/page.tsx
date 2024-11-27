@@ -327,7 +327,7 @@ export default function Graph() {
   return (
     <>
       <div className="p-10">
-        <h1 className="text-xl">Network Graph</h1>
+        <h1 className="text-xl mb-4">Network Graph</h1>
         {/* Toast Component */}
         {notification.show ? (
           <div className="toast toast-top toast-end z-10">
@@ -346,7 +346,7 @@ export default function Graph() {
             </div>
           </section>
         ) : (
-          <div className="relative my-4">
+          <div className="relative mb-4">
             {/* Search & Filter  */}
             <section className="flex items-top">
               <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
@@ -358,20 +358,20 @@ export default function Graph() {
               </label>
               <div className="indicator">
                 <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
-                <div className="dropdown">
+                <div className="dropdown dropdown-bottom dropdown-end">
                   <div tabIndex={0} role="button" className="btn ms-2">Filter <Image src="/img/filter.svg" width={24} height={24} className="opacity-60" alt="Filter Search" /> </div>
                   <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                     <li>
                       <div>
                         <label className="label cursor-pointer">
+                          <input type="checkbox" className="checkbox me-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
                           <span className="label-text">Gateway</span>
-                          <input type="checkbox" className="checkbox ms-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
                         </label>
                       </div>
                       <div>
                         <label className="label cursor-pointer">
+                          <input type="checkbox" className="checkbox me-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
                           <span className="label-text">VPN</span>
-                          <input type="checkbox" className="checkbox ms-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
                         </label>
                       </div>
                     </li>
