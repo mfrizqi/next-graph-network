@@ -124,52 +124,23 @@ div.vis-network div.vis-edit-mode:after {
   content: " ✎"
 }
 
-/* .vis-button.vis-zoomIn:after {
-  content: "+";
-  font-weight: bold;
-}
-
-.vis-button.vis-zoomOut:after {
-  content: "−";
-  font-weight: bold;
-}
-
-.vis-button.vis-zoomExtends:after {
-  content: "⤧";
-}
-
-div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
-  top: 10px !important;
-  right: -140px !important;
-  bottom: 0 !important;
-}
-
+/* Override Position zoom in/out & fit center */
 div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
-  top: 10px !important;
-  right: -110px !important;
-  bottom: 0 !important;
-}
-
-div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
-  top: 10px;
-  right: -175px;
-} */
-
-div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
-  bottom: 10px !important;
+  bottom: 14px !important;
   right: 80px !important;
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
-  bottom: 10px !important;
+  bottom: 14px !important;
   right: 47px !important;
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
-  bottom: 12px !important;
+  bottom: 16px !important;
   right: 12px !important;
 }
 
+/* Override vis-close (message after click add node / edges  */
 .vis-close {
   display: block;
   touch-action: pan-y;
@@ -216,4 +187,44 @@ div.vis-label {
 /* on edit: Separator */
 div.vis-network div.vis-manipulation div.vis-separator-line {
   display: none !important
+}
+
+/* Override navigation arrows */
+div.vis-network div.vis-navigation div.vis-button.vis-up {
+  bottom: 64px !important;
+  left: 70px !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-down {
+  bottom: 28px !important;
+  left: 70px !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-right,
+div.vis-network div.vis-navigation div.vis-button.vis-left{
+  bottom: 46px !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-left {
+  left: 42px !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-right {
+  left: 102px !important;
+}
+
+
+/* Media Queries */
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 768px) {
+
+  div.vis-network div.vis-navigation div.vis-button.vis-zoomIn,
+  div.vis-network div.vis-navigation div.vis-button.vis-zoomOut,
+  div.vis-network div.vis-navigation div.vis-button.vis-up,
+  div.vis-network div.vis-navigation div.vis-button.vis-down,
+  div.vis-network div.vis-navigation div.vis-button.vis-left,
+  div.vis-network div.vis-navigation div.vis-button.vis-right {
+    display: none !important;
+  }
 }

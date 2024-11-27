@@ -83,9 +83,6 @@ export default function Graph() {
 
     setNetworks(network)
 
-    // setNetworks(NetworkRef.current &&
-    //   new Network(NetworkRef.current, { nodes, edges }, options || {}));
-
     network?.once("initRedraw", function () {
       if (lastClusterZoomLevel === 0) {
         lastClusterZoomLevel = network?.getScale();
@@ -98,21 +95,13 @@ export default function Graph() {
         const node = params.nodes[0]
         if (typeof node === 'number') {
           const selected = getNode(node);
+          console.log(selected)
           setSelectedNode(selected);
-          console.log(selectedNode)
           setNodeData(selected);
           (document.getElementById('modal_box') as any)?.showModal()
         }
       }
     });
-
-    // network?.on("hoverNode", function (params) {
-    //   console.log("hoverNode Event:", params);
-    //   const node = params.node
-    //   const selected = getNode(node);
-    //   console.log(selected)
-
-    // });
 
     network?.on("zoom", function (params: any) {
       console.log('zoomin in/out')
@@ -168,7 +157,7 @@ export default function Graph() {
 
     function getNode(nodeId: number) {
       // Accessing deep into network body to get node
-      const nodeObj = (networks as any)?.body.nodes[nodeId]
+      const nodeObj = (network as any)?.body.nodes[nodeId]
       return nodeObj; //nodeObj.label to get label 
     }
 
@@ -326,7 +315,7 @@ export default function Graph() {
 
   return (
     <>
-      <div className="p-10">
+      <div className="p-6 md:p-10">
         <h1 className="text-xl mb-4">Network Graph</h1>
         {/* Toast Component */}
         {notification.show ? (
@@ -339,7 +328,7 @@ export default function Graph() {
         }
 
         {isLoading ? (
-          <section className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
+          <section className="border-2 border-slate-500 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
             <div className="text-center">
               <span className="loading loading-spinner loading-lg text-primary mx-auto"></span>
               <div className="text-center">Loading Network Graph</div>
@@ -350,17 +339,23 @@ export default function Graph() {
             {/* Search & Filter  */}
             <section className="flex items-top">
               <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
+                <Image src="/img/search.svg" width={20} height={20} className="cursor-pointer opacity-75" alt="Search Icon" />
                 <input type="text" className="grow" placeholder="Search label..." value={search || ''}
                   onChange={handleSearch} />
                 {search !== '' ? (
-                  <Image src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
+                  <Image src="/img/x.svg" width={28} height={28} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
                 ) : (<></>)}
               </label>
+              
+              {/* Filter Dropdown */}
               <div className="indicator">
                 <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
                 <div className="dropdown dropdown-bottom dropdown-end">
-                  <div tabIndex={0} role="button" className="btn ms-2">Filter <Image src="/img/filter.svg" width={24} height={24} className="opacity-60" alt="Filter Search" /> </div>
-                  <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                  <div tabIndex={0} role="button" className="btn ms-4">
+                    <span className="md:block hidden">Filter</span>
+                    <img src="/img/filter.svg" className="opacity-60 w-8 md:w-6" alt="Filter Search" /> </div>
+                  <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-slate-300">
+                    <div className="p-2 font-semibold">Group By: </div>
                     <li>
                       <div>
                         <label className="label cursor-pointer">
@@ -381,12 +376,11 @@ export default function Graph() {
 
             </section>
 
-            <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
+            <div id="mynetwork" className="border-2 border-slate-500 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
             </div>
-            <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100" style={{ bottom: '8px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
+            <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100 lg:block hidden" style={{ bottom: '12px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
               &#x26F6;
             </div>
-            {/* <div className="absolute left-2 top-3">Plus Minus</div> */}
           </div>
         )}
         {/* <button className="btn mt-4" onClick={addNode}>Add Node</button> */}
@@ -401,24 +395,29 @@ export default function Graph() {
           <section className="mt-4 mb-8">
             <label className="form-control w-full max-w-xs mb-3">
               <div className="label">
-                <span className="label-text">Label</span>
+                <span className="label-text">Node Label</span>
               </div>
-              <input type="text" placeholder="Type here" name="label" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.label || ''} required />
+              <input type="text" placeholder="Type here" name="label" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.label || ''} readOnly />
             </label>
-            <label className="form-control w-full max-w-xs">
+            <label className="form-control w-full max-w-xs mb-3">
               <div className="label">
                 <span className="label-text">IPv4</span>
               </div>
-              <input type="text" placeholder="Type here" name="IPv4" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.IPv4 || ''} />
+              <input type="text" placeholder="Type here" name="IPv4" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.IPv4 || ''} readOnly />
+            </label>
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <span className="label-text">Group</span>
+              </div>
+              <input type="text" placeholder="Type here" name="IPv4" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.group || ''} readOnly />
             </label>
           </section>
-          <div className="modal-action">
+          {/* <div className="modal-action">
             <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
               <button className="btn btn-ghost me-2" name="cancelBtn" onClick={handleSubmit}>Cancel</button>
               <button className="btn" name="submitBtn" onClick={handleSubmit}>Save Changes</button>
             </form>
-          </div>
+          </div> */}
         </div>
       </dialog>
     </>

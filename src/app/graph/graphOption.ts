@@ -5,7 +5,13 @@ const graphOptions = {
       min: 1,
       max: 1
     },
-    font: '12px arial white'
+    font: {
+      size: 12,
+      color: "white",
+      face: "arial",
+      strokeWidth: 3,
+      strokeColor: "#000000",
+    },
   },
   physics: {
     stabilization: { fit: false },
