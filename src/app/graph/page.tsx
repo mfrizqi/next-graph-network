@@ -253,7 +253,8 @@ export default function Graph() {
   // }
 
   function openFullscreen() {
-    const elem = document.documentElement as HTMLElement & {
+
+    const elem = document.getElementById('mynetwork') as HTMLElement & {
       mozRequestFullScreen(): Promise<void>;
       webkitRequestFullscreen(): Promise<void>;
       msRequestFullscreen(): Promise<void>;
