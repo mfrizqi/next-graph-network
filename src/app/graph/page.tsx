@@ -174,7 +174,7 @@ export default function Graph() {
   useDebounce(() => {
     const findNode = nodes.filter((node: any) => node.label.toLowerCase().includes(search.toLowerCase()))
     const node = getNode(findNode[0]?.id)
-    const moveOption = {
+    let moveOption = {
       position: { x: node?.x, y: node?.y },
       scale: 1.5,
       animation: {
@@ -182,7 +182,14 @@ export default function Graph() {
         easingFunction: 'easeInOutQuad'
       }
     }
-    networks?.moveTo(moveOption)
+    if (search) {
+      networks?.moveTo(moveOption)
+    } else {
+      moveOption.position.x = 0
+      moveOption.position.x = 0
+      moveOption.scale = 1
+      networks?.moveTo(moveOption)
+    }
   }, [nodes, search], 800
   );
 
@@ -249,6 +256,10 @@ export default function Graph() {
     }
   }
 
+  function deleteSearch() {
+    setSearch('')
+  }
+
   return (
     <>
       <div className="p-10">
@@ -267,9 +278,12 @@ export default function Graph() {
           <div className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center" style={{ height: '80vh' }}>Loading Nodes...</div>
         ) : (
           <div className="relative my-4">
-            <label className="input input-bordered flex items-center gap-2 w-1/4 mb-4">
+            <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
               <input type="text" className="grow" placeholder="Search node" value={search || ''}
                 onChange={handleSearch} />
+              {search !== '' ? (
+                <img src="/img/x.svg" width={32} height={32} className="cursor-pointer" onClick={deleteSearch} />
+              ) : (<></>)}
             </label>
             <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
             </div>
