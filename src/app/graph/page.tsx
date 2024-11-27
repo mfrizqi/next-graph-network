@@ -129,6 +129,17 @@ export default function Graph() {
       }
     });
 
+    network?.on("hoverNode", function (params) {
+      const selected = getNode(params?.node);
+      console.log(selected)
+      selected.body.container.style.cursor = 'pointer'
+    });
+
+    network?.on("blurNode", function (params) {
+      const selected = getNode(params.node);
+      selected.body.container.style.cursor = 'default'
+    });
+
     network?.on("zoom", function (params: any) {
       console.log('zoomin in/out')
       if (params.direction == "-") {
@@ -410,7 +421,7 @@ export default function Graph() {
             ) : (
               <section className="border-2 border-slate-500 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
                 <div className="text-center">
-                <Image src="/img/alert-triangle.svg" width={48} height={48} className="cursor-pointer opacity-75 mx-auto mb-4" alt="Error Fetch" />
+                  <Image src="/img/alert-triangle.svg" width={48} height={48} className="cursor-pointer opacity-75 mx-auto mb-4" alt="Error Fetch" />
                   <div className="text-center">Something went wrong while load graph</div>
                 </div>
               </section>

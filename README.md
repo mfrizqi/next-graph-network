@@ -26,9 +26,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 I have been researching for library that works out for graph network and the best one i found is using [Vis Network Library](https://visjs.github.io/vis-network/docs/network/). It has a broad features to tweak, modify and customize to fulfill our need (In this case network graph).
 
-For generating data initially, i use [mockapi.io](https://mockapi.io/) and move those datas to [supabase](https://supabase.com/) for flexibility, Easier modification and customizable payload or request
+For generating data initially, i use [mockapi.io](https://mockapi.io/) for the nodes & edges, and move those datas to [supabase](https://supabase.com/)
 
-Also i choose [daisyUI](https://daisyui.com/) as the component library that build up on top of [Tailwind CSS](https://tailwindcss.com/) so we don't need extra steps to add component or styling that much.
+Also i choose [daisyUI](https://daisyui.com/) as the component library that build up on top of [Tailwind CSS](https://tailwindcss.com/) so we don't need extra steps to add component or styling.
 
 About the graph, Vis Network offers a great features that i implement in this repo such as:
 
@@ -36,11 +36,6 @@ About the graph, Vis Network offers a great features that i implement in this re
 - Grouping
 - Styling Node & Edges
 - Zooming In & Out
-- Accessibility (Utilize Keyboard)
+- Accessibility (Utilize Keyboard navigation)
 
 
-<!-- ## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details. -->
