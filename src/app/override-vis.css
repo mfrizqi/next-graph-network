@@ -180,7 +180,13 @@ div.vis-label {
 
 .vis-none {
   padding-top: 12px !important;
-  padding-left: 24px !important
+  padding-left: 24px !important;
+  background-color: #242424;
+  color: grey;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 36px;
 }
 
 
