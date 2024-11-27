@@ -55,8 +55,11 @@ export default function Graph() {
         .then((res) => res.json())
         .then((data) => {
           console.log(data)
-          adjustTitleData(data)
-          setIsLoading(false)
+
+          setTimeout(() => {
+            adjustTitleData(data)
+            setIsLoading(false)
+          }, 1500);
         })
 
       fetch(db.baseUrl + '/rest/v1/edges', {
@@ -68,8 +71,10 @@ export default function Graph() {
       })
         .then((res) => res.json())
         .then((data) => {
-          setEdges(data)
-          setIsLoading(false)
+          setTimeout(() => {
+            setEdges(data)
+            setIsLoading(false)
+          }, 1500);
         })
     }
 
@@ -174,38 +179,40 @@ export default function Graph() {
   }, [NetworkRef, nodes, edges]);
 
   useDebounce(() => {
-    const findNode = nodes.filter((node: any) => node.label.toLowerCase().includes(search.toLowerCase()))
-    const node = getNode(findNode[0]?.id)
-    const moveOption = {
-      position: { x: node?.x, y: node?.y },
-      scale: 1.5,
-      animation: {
-        duration: 500,
-        easingFunction: 'easeInOutQuad'
+    if (nodes.length > 0) {
+      const findNode = nodes.filter((node: any) => node.label.toLowerCase().includes(search.toLowerCase()))
+      const node = getNode(findNode[0]?.id)
+      const moveOption = {
+        position: { x: node?.x, y: node?.y },
+        scale: 1.5,
+        animation: {
+          duration: 500,
+          easingFunction: 'easeInOutQuad'
+        }
       }
-    }
-    console.log(node)
-    if (node && search) {
-      networks?.moveTo(moveOption)
-    } else if (!search) {
-      moveOption.position.x = 0
-      moveOption.position.x = 0
-      moveOption.scale = 1
-      networks?.moveTo(moveOption)
-    } else {
-      setNotification({
-        message: 'Node ' + search + ' is not found',
-        status: 'alert-warning',
-        show: true
-      })
-
-      setTimeout(() => {
+      console.log(node)
+      if (node && search) {
+        networks?.moveTo(moveOption)
+      } else if (!search) {
+        moveOption.position.x = 0
+        moveOption.position.x = 0
+        moveOption.scale = 1
+        networks?.moveTo(moveOption)
+      } else {
         setNotification({
-          message: '',
-          status: 'alert-error',
-          show: false
+          message: 'Node ' + search + ' is not found',
+          status: 'alert-warning',
+          show: true
         })
-      }, 3000);
+
+        setTimeout(() => {
+          setNotification({
+            message: '',
+            status: 'alert-error',
+            show: false
+          })
+        }, 3000);
+      }
     }
   }, [nodes, search], 800
   );
@@ -285,14 +292,19 @@ export default function Graph() {
         {notification.show ? (
           <div className="toast toast-top toast-end z-10">
             <div className={`alert ${notification.status}`}>
-              <span className={`${notification.status === 'alert-error' ? 'text-white' : 'text-black' }`}>{notification.message}</span>
+              <span className={`${notification.status === 'alert-error' ? 'text-white' : 'text-black'}`}>{notification.message}</span>
             </div>
           </div>) :
           (<></>)
         }
 
         {isLoading ? (
-          <div className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center" style={{ height: '80vh' }}>Loading Nodes...</div>
+          <section className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
+            <div className="text-center">
+              <span className="loading loading-spinner loading-lg text-primary mx-auto"></span>
+              <div className="text-center">Loading Network Graph</div>
+            </div>
+          </section>
         ) : (
           <div className="relative my-4">
             <section className="flex items-top">
@@ -300,7 +312,7 @@ export default function Graph() {
                 <input type="text" className="grow" placeholder="Search node" value={search || ''}
                   onChange={handleSearch} />
                 {search !== '' ? (
-                  <Image  src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
+                  <Image src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
                 ) : (<></>)}
               </label>
               <div className="dropdown">
