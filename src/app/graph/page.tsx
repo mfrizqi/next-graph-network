@@ -285,10 +285,10 @@ export default function Graph() {
   function handleChangeFilter(event: any) {
     console.log(event.target.name, event.target.checked)
     const name = event.target.name;
-    setFilterCheck({
+    setFilterCheck((filterCheck:any) => ({
       ...filterCheck,
       [name]: event.target.checked
-    })
+    }))
     filterCheck[name] = event.target.checked
 
     console.log(filterCheck)
@@ -307,7 +307,7 @@ export default function Graph() {
     if (filterValue.length > 0) {
       filterValue.forEach((key: string) => {
         console.log(`key: ${key}`)
-        filtered.push.apply(filtered, nodes.filter((node: any) => {
+        filtered.push.apply(filtered, originNodes.filter((node: any) => {
           return node.group === key
         }))
       });
