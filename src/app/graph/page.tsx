@@ -6,6 +6,9 @@ import graphOptions from "./graphOption";
 import useDebounce from './useDebounce';
 import Image from "next/image";
 
+import Loading from "../component/loading";
+
+
 export default function Graph() {
 
   const db = {
@@ -14,19 +17,19 @@ export default function Graph() {
   }
 
   const [networks, setNetworks] = useState<any>({})
-  const [originNodes, setOriginNodes] = useState<any[]>([])
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
+  const [nodeData, setNodeData] = useState<any>({})
+
+  const [search, setSearch] = useState('');
+  const [originNodes, setOriginNodes] = useState<any[]>([])
   const [filterCheck, setFilterCheck] = useState<any>({
     gateway: false,
     vpn: false
   });
-  // const [selectedNode, setSelectedNode] = useState<any>({})
-  const [nodeData, setNodeData] = useState<any>({})
-
-  const [search, setSearch] = useState('');
 
   const [isLoading, setIsLoading] = useState(true)
+  const [errorFetch, setErrorFetch] = useState(false)
   const [notification, setNotification] = useState<any>({
     message: 'Message',
     status: 'alert-info',
@@ -41,40 +44,63 @@ export default function Graph() {
   const options = graphOptions;
 
   const NetworkRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (nodes.length === 0) {
-      // Fetch init data Nodes & Edges
-      fetch(db.baseUrl + '/rest/v1/networks', {
-        method: 'GET',
-        headers: {
-          "Apikey": db.anonKey,
-          "Authorization": "Bearer " + db.anonKey
-        }
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data)
 
+  // Fetch Nodes & Edges
+  const fetchConfig = {
+    method: 'GET',
+    headers: {
+      "Apikey": db.anonKey,
+      "Authorization": "Bearer " + db.anonKey
+    }
+  }
+  function fetchNodes() {
+    fetch(db.baseUrl + '/rest/v1/networks', fetchConfig)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res)
+      })
+      .then((data) => {
+        console.log(data)
+        if (data) {
           setTimeout(() => {
             adjustTitleData(data)
             setIsLoading(false)
           }, 1500);
-        })
-
-      fetch(db.baseUrl + '/rest/v1/edges', {
-        method: 'GET',
-        headers: {
-          "Apikey": db.anonKey,
-          "Authorization": "Bearer " + db.anonKey
         }
+      }).catch((e) => {
+        console.table(e)
+        setIsLoading(false)
+        setErrorFetch(true)
       })
-        .then((res) => res.json())
-        .then((data) => {
+  }
+  function fetchEdges() {
+    fetch(db.baseUrl + '/rest/v1/edges', fetchConfig)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res)
+      })
+      .then((data) => {
+        if (data) {
           setTimeout(() => {
             setEdges(data)
             setIsLoading(false)
           }, 1500);
-        })
+        }
+      }).catch((e) => {
+        setIsLoading(false)
+        setErrorFetch(true)
+      })
+  }
+
+  useEffect(() => {
+    if (nodes.length === 0) {
+      // Fetch init data Nodes & Edges
+      fetchNodes()
+      fetchEdges()
     }
 
     const network =
@@ -247,14 +273,9 @@ export default function Graph() {
     networks?.redraw()
   }
 
-  // function handleSubmit() {
-  //   setSelectedNode(nodeData)
-  //   setNodeData({})
-  // }
-
   function openFullscreen() {
 
-    const elem = document.getElementById('mynetwork') as HTMLElement & {
+    const elem = document.getElementById('networkGraph') as HTMLElement & {
       mozRequestFullScreen(): Promise<void>;
       webkitRequestFullscreen(): Promise<void>;
       msRequestFullscreen(): Promise<void>;
@@ -318,7 +339,7 @@ export default function Graph() {
     <>
       <div className="p-6 md:p-10">
         <div className="p-4 mb-4 bg-gray-200 w-full md:w-1/2 rounded-lg">
-          <h1 className="text-xl font-semibold" style={{color: '#6a39df'}}>Network Graph</h1>
+          <h1 className="text-xl font-semibold" style={{ color: '#6a39df' }}>Network Graph</h1>
           <p className="text-slate-600">An overview network graph gateway & VPN</p>
         </div>
         {/* Toast Component */}
@@ -331,63 +352,71 @@ export default function Graph() {
           (<></>)
         }
 
-        {isLoading ? (
-          <section className="border-2 border-slate-500 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
-            <div className="text-center">
-              <span className="loading loading-spinner loading-lg text-primary mx-auto"></span>
-              <div className="text-center">Loading Network Graph</div>
-            </div>
-          </section>
-        ) : (
-          <div className="relative mb-4">
-            {/* Search & Filter  */}
-            <section className="flex items-top">
-              <label className="input flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4 border border-slate-500">
-                <Image src="/img/search.svg" width={20} height={20} className="cursor-pointer opacity-75" alt="Search Icon" />
-                <input type="text" className="grow" placeholder="Search label..." value={search || ''}
-                  onChange={handleSearch} />
-                {search !== '' ? (
-                  <Image src="/img/x.svg" width={28} height={28} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
-                ) : (<></>)}
-              </label>
+        {/* Network Graph Content */}
 
-              {/* Filter Dropdown */}
-              <div className="indicator">
-                <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
-                <div className="dropdown dropdown-bottom dropdown-end">
-                  <div tabIndex={0} role="button" className="btn ms-4">
-                    <span className="font-medium md:block hidden">Filter</span>
-                    <img src="/img/filter.svg" className="opacity-60 w-8 md:w-5" alt="Filter Search" /> </div>
-                  <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-slate-300">
-                    <div className="p-2 font-semibold">Group By: </div>
-                    <li>
-                      <div>
-                        <label className="label cursor-pointer">
-                          <input type="checkbox" className="checkbox me-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
-                          <span className="label-text">Gateway</span>
-                        </label>
-                      </div>
-                      <div>
-                        <label className="label cursor-pointer">
-                          <input type="checkbox" className="checkbox me-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
-                          <span className="label-text">VPN</span>
-                        </label>
-                      </div>
-                    </li>
-                  </ul>
+        {isLoading ? (
+          <Loading></Loading>
+        ) : (
+          <>
+            {!errorFetch ? (
+              <div className="relative mb-4">
+                {/* Search & Filter  */}
+                <section className="flex items-top">
+                  <label className="input flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4 border border-slate-500">
+                    <Image src="/img/search.svg" width={20} height={20} className="cursor-pointer opacity-75" alt="Search Icon" />
+                    <input type="text" className="grow" placeholder="Search label..." value={search || ''}
+                      onChange={handleSearch} />
+                    {search !== '' ? (
+                      <Image src="/img/x.svg" width={28} height={28} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
+                    ) : (<></>)}
+                  </label>
+
+                  {/* Filter Dropdown */}
+                  <div className="indicator">
+                    <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
+                    <div className="dropdown dropdown-bottom dropdown-end">
+                      <div tabIndex={0} role="button" className="btn ms-4">
+                        <span className="font-medium md:block hidden">Filter</span>
+                        <img src="/img/filter.svg" className="opacity-60 w-8 md:w-5" alt="Filter Search" /> </div>
+                      <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-slate-300">
+                        <div className="p-2 font-semibold">Group By: </div>
+                        <li>
+                          <div>
+                            <label className="label cursor-pointer">
+                              <input type="checkbox" className="checkbox me-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
+                              <span className="label-text">Gateway</span>
+                            </label>
+                          </div>
+                          <div>
+                            <label className="label cursor-pointer">
+                              <input type="checkbox" className="checkbox me-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
+                              <span className="label-text">VPN</span>
+                            </label>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </section>
+
+                <div id="networkGraph" className="border-2 border-slate-400 rounded-md" style={{ backgroundColor: '#1a1a1a', height: '80vh' }} ref={NetworkRef}>
+                </div>
+                <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100 lg:block hidden" style={{ bottom: '12px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
+                  &#x26F6;
                 </div>
               </div>
+            ) : (
+              <section className="border-2 border-slate-500 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
+                <div className="text-center">
+                <Image src="/img/alert-triangle.svg" width={48} height={48} className="cursor-pointer opacity-75 mx-auto mb-4" alt="Error Fetch" />
+                  <div className="text-center">Something went wrong while load graph</div>
+                </div>
+              </section>
+            )}
 
-            </section>
-
-            <div id="mynetwork" className="border-2 border-slate-400 rounded-md" style={{ backgroundColor: '#1a1a1a', height: '80vh' }} ref={NetworkRef}>
-            </div>
-            <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100 lg:block hidden" style={{ bottom: '12px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
-              &#x26F6;
-            </div>
-          </div>
+          </>
         )}
-        {/* <button className="btn mt-4" onClick={addNode}>Add Node</button> */}
       </div>
       {/* Modal Component */}
       <dialog id="modal_box" className="modal modal-bottom sm:modal-middle">
