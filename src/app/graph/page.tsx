@@ -15,6 +15,7 @@ export default function Graph() {
   const [networks, setNetworks] = useState<any>({})
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
+  const [filteredEdges, setFilteredEdges] = useState<any>([])
   const [selectedNode, setSelectedNode] = useState<any>({})
   const [nodeData, setNodeData] = useState<any>({})
 
@@ -182,13 +183,28 @@ export default function Graph() {
         easingFunction: 'easeInOutQuad'
       }
     }
-    if (search) {
+    console.log(node)
+    if (node && search) {
       networks?.moveTo(moveOption)
-    } else {
+    } else if (!search) {
       moveOption.position.x = 0
       moveOption.position.x = 0
       moveOption.scale = 1
       networks?.moveTo(moveOption)
+    } else {
+      setNotification({
+        message: 'Node ' + search + ' is not found',
+        status: 'alert-warning',
+        show: true
+      })
+
+      setTimeout(() => {
+        setNotification({
+          message: '',
+          status: 'alert-error',
+          show: false
+        })
+      }, 3000);
     }
   }, [nodes, search], 800
   );
@@ -268,7 +284,7 @@ export default function Graph() {
         {notification.show ? (
           <div className="toast toast-top toast-end z-10">
             <div className={`alert ${notification.status}`}>
-              <span>{notification.message}</span>
+              <span className={`${notification.status === 'alert-error' ? 'text-white' : 'text-black' }`}>{notification.message}</span>
             </div>
           </div>) :
           (<></>)
@@ -278,13 +294,24 @@ export default function Graph() {
           <div className="border-2 border-zinc-600 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center" style={{ height: '80vh' }}>Loading Nodes...</div>
         ) : (
           <div className="relative my-4">
-            <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
-              <input type="text" className="grow" placeholder="Search node" value={search || ''}
-                onChange={handleSearch} />
-              {search !== '' ? (
-                <img src="/img/x.svg" width={32} height={32} className="cursor-pointer" onClick={deleteSearch} />
-              ) : (<></>)}
-            </label>
+            <section className="flex items-top">
+              <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
+                {/* <img src="/img/search.svg" width={32} height={32} className="opacity-60" /> */}
+                <input type="text" className="grow" placeholder="Search node" value={search || ''}
+                  onChange={handleSearch} />
+                {search !== '' ? (
+                  <img src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} />
+                ) : (<></>)}
+              </label>
+              <div className="dropdown">
+                <div tabIndex={0} role="button" className="btn ms-2">Filter <img src="/img/filter.svg" width={24} height={24} className="opacity-60" /> </div>
+                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                  <li><a>Gateway</a></li>
+                  <li><a>VPN</a></li>
+                </ul>
+              </div>
+            </section>
+
             <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
             </div>
             <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100" style={{ bottom: '8px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
