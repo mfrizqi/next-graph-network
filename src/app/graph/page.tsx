@@ -96,7 +96,7 @@ export default function Graph() {
         if (typeof node === 'number') {
           const selected = getNode(node);
           console.log(selected)
-          setSelectedNode(selected);
+          // setSelectedNode(selected);
           setNodeData(selected);
           (document.getElementById('modal_box') as any)?.showModal()
         }
