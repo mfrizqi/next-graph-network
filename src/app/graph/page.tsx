@@ -70,7 +70,7 @@ export default function Graph() {
           }, 1500);
         }
       }).catch((e) => {
-        console.table(e)
+        console.error(e)
         setIsLoading(false)
         setErrorFetch(true)
       })
@@ -93,6 +93,7 @@ export default function Graph() {
       }).catch((e) => {
         setIsLoading(false)
         setErrorFetch(true)
+        console.error(e)
       })
   }
 
