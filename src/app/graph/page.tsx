@@ -14,18 +14,17 @@ export default function Graph() {
   }
 
   const [networks, setNetworks] = useState<any>({})
+  const [originNodes, setOriginNodes] = useState<any[]>([])
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
-  // const [filteredEdges, setFilteredEdges] = useState<any>([])
+  const [filterCheck, setFilterCheck] = useState<any>({
+    gateway: false,
+    vpn: false
+  });
   const [selectedNode, setSelectedNode] = useState<any>({})
   const [nodeData, setNodeData] = useState<any>({})
 
   const [search, setSearch] = useState('');
-
-  // const [modal, setModal] = useState({
-  //   type: 'add',
-  //   button: 'Submit'
-  // })
 
   const [isLoading, setIsLoading] = useState(true)
   const [notification, setNotification] = useState<any>({
@@ -173,8 +172,6 @@ export default function Graph() {
       return nodeObj; //nodeObj.label to get label 
     }
 
-    console.log('networks')
-    console.log(networks)
 
   }, [NetworkRef, nodes, edges]);
 
@@ -242,6 +239,7 @@ export default function Graph() {
       }
     })
     setNodes(newNodes);
+    setOriginNodes(newNodes);
     setNotification({})
   }
 
@@ -284,6 +282,48 @@ export default function Graph() {
     setSearch('')
   }
 
+  function handleChangeFilter(event: any) {
+    console.log(event.target.name, event.target.checked)
+    const name = event.target.name;
+    setFilterCheck({
+      ...filterCheck,
+      [name]: event.target.checked
+    })
+    filterCheck[name] = event.target.checked
+
+    console.log(filterCheck)
+
+    let filterValue: any = []
+    let filtered: any = []
+
+    for (const key in filterCheck) {
+      console.log(`${key}: ${filterCheck[key]}`)
+      if (filterCheck[key]) {
+        filterValue.push(key)
+      }
+    }
+    console.log(filterValue)
+
+    if (filterValue.length > 0) {
+      filterValue.forEach((key: string) => {
+        console.log(`key: ${key}`)
+        filtered.push.apply(filtered, nodes.filter((node: any) => {
+          return node.group === key
+        }))
+      });
+
+      console.log('filtered:', filtered)
+      setNodes(filtered)
+    } else {
+      setNodes(originNodes)
+    }
+  }
+
+  const countFilter: any = () => {
+    const count = Object.values(filterCheck).reduce((a: any, item: any) => a + (item === true ? 1 : 0), 0)
+    return count;
+  }
+
   return (
     <>
       <div className="p-10">
@@ -307,6 +347,7 @@ export default function Graph() {
           </section>
         ) : (
           <div className="relative my-4">
+            {/* Search & Filter  */}
             <section className="flex items-top">
               <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
                 <input type="text" className="grow" placeholder="Search label..." value={search || ''}
@@ -315,13 +356,29 @@ export default function Graph() {
                   <Image src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
                 ) : (<></>)}
               </label>
-              <div className="dropdown">
-                <div tabIndex={0} role="button" className="btn ms-2">Filter <Image src="/img/filter.svg" width={24} height={24} className="opacity-60" alt="Filter Search" /> </div>
-                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                  <li><a>Gateway</a></li>
-                  <li><a>VPN</a></li>
-                </ul>
+              <div className="indicator">
+                <span className="indicator-item badge badge-secondary">{countFilter()}</span>
+                <div className="dropdown dropdown-open">
+                  <div tabIndex={0} role="button" className="btn ms-2">Filter <Image src="/img/filter.svg" width={24} height={24} className="opacity-60" alt="Filter Search" /> </div>
+                  <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                    <li>
+                      <div>
+                        <label className="label cursor-pointer">
+                          <span className="label-text">Gateway</span>
+                          <input type="checkbox" className="checkbox ms-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
+                        </label>
+                      </div>
+                      <div>
+                        <label className="label cursor-pointer">
+                          <span className="label-text">VPN</span>
+                          <input type="checkbox" className="checkbox ms-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
+                        </label>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
               </div>
+
             </section>
 
             <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
