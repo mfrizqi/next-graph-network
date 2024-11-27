@@ -174,7 +174,7 @@ export default function Graph() {
   useDebounce(() => {
     const findNode = nodes.filter((node: any) => node.label.toLowerCase().includes(search.toLowerCase()))
     const node = getNode(findNode[0]?.id)
-    let moveOption = {
+    const moveOption = {
       position: { x: node?.x, y: node?.y },
       scale: 1.5,
       animation: {
