@@ -16,7 +16,7 @@ const graphOptions = {
     keyboard: true,
     hover: true
   },
-  layout: { randomSeed: 13 },
+  layout: { randomSeed: 20 },
   groups: {
     gateway: {
       color: { background: "red", border: "white" },

@@ -11,9 +11,11 @@ export default function Graph() {
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZma3Z1bW9tcmhhYmd3YnJ2YmxxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIyMTY1NjQsImV4cCI6MjA0Nzc5MjU2NH0.G5Y-c7j8TCHCPd25Cat_YquvD9RU_JaJPgMKHhmThJA'
   }
 
+  const [networks, setNetworks] = useState<any>({})
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
   const [selectedNode, setSelectedNode] = useState<any>({})
+  const [nodeData, setNodeData] = useState<any>({})
 
   // const [modal, setModal] = useState({
   //   type: 'add',
@@ -70,34 +72,39 @@ export default function Graph() {
       NetworkRef.current &&
       new Network(NetworkRef.current, { nodes, edges }, options || {});
 
+    setNetworks(network)
+
+    // setNetworks(NetworkRef.current &&
+    //   new Network(NetworkRef.current, { nodes, edges }, options || {}));
+
     network?.once("initRedraw", function () {
       if (lastClusterZoomLevel === 0) {
         lastClusterZoomLevel = network?.getScale();
       }
     });
 
-    network?.on("click", function (params) {
+    network?.on("click", function (params: any) {
       console.log(params)
-      
-      // params.event = "[original event]";
-      console.log(network.getNodeAt(params.pointer.DOM))
-      // consolFe.log(network.getEdgeAt(params.pointer.DOM))
       if (params?.nodes?.length > 0) {
         const node = params.nodes[0]
         if (typeof node === 'number') {
           const selected = getNode(node);
-          console.log(selected)
           setSelectedNode(selected);
+          setNodeData(selected);
           (document.getElementById('modal_box') as any)?.showModal()
         }
       }
     });
 
     // network?.on("hoverNode", function (params) {
-    //   // console.log("hoverNode Event:", params);
+    //   console.log("hoverNode Event:", params);
+    //   const node = params.node
+    //   const selected = getNode(node);
+    //   console.log(selected)
+
     // });
 
-    network?.on("zoom", function (params) {
+    network?.on("zoom", function (params: any) {
       console.log('zoomin in/out')
       if (params.direction == "-") {
         if (params.scale < lastClusterZoomLevel * clusterFactor) {
@@ -151,9 +158,12 @@ export default function Graph() {
 
     function getNode(nodeId: number) {
       // Accessing deep into network body to get node
-      const nodeObj = (network as any)?.body.nodes[nodeId]
+      const nodeObj = (networks as any)?.body.nodes[nodeId]
       return nodeObj; //nodeObj.label to get label 
     }
+
+    console.log('networks')
+    console.log(networks)
 
   }, [NetworkRef, nodes, edges]);
 
@@ -177,6 +187,37 @@ export default function Graph() {
     setNotification({})
   }
 
+  function handleChange(event: any) {
+    const options = nodeData.options
+    const { name, value } = event.target;
+    if (name === 'label')
+      options.label = value
+    else {
+      options.IPv4 = value
+    }
+
+    setNodeData({ ...nodeData, options })
+
+    networks.body.emitter.emit('_dataChanged')
+    networks?.redraw()
+  }
+
+  function handleSubmit() {
+    setSelectedNode(nodeData)
+    setNodeData({})
+  }
+
+  function openFullscreen() {
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem?.webkitRequestFullscreen) { /* Safari */
+      elem?.webkitRequestFullscreen();
+    } else if (elem?.msRequestFullscreen) { /* IE11 */
+      elem?.msRequestFullscreen();
+    }
+  }
+
   return (
     <>
       <div className="p-10">
@@ -197,6 +238,9 @@ export default function Graph() {
           <div className="relative">
             <div id="mynetwork" className="border-2 border-zinc-600 rounded-md bg-zinc-900" style={{ backgroundColor: '', height: '80vh' }} ref={NetworkRef}>
             </div>
+            <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100" style={{ bottom: '8px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
+              &#x26F6;
+            </div>
             {/* <div className="absolute left-2 top-3">Plus Minus</div> */}
           </div>
         )}
@@ -205,20 +249,33 @@ export default function Graph() {
       {/* Modal Component */}
       <dialog id="modal_box" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello! {selectedNode?.options?.label}</h3>
+          <h3 className="font-bold text-lg">Detail Node</h3>
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3">✕</button>
           </form>
-          <p className="py-4">Press ESC key or click the button below to close</p>
+          <section className="mt-4 mb-8">
+            <label className="form-control w-full max-w-xs mb-3">
+              <div className="label">
+                <span className="label-text">Label</span>
+              </div>
+              <input type="text" placeholder="Type here" name="label" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.label || ''} required />
+            </label>
+            <label className="form-control w-full max-w-xs">
+              <div className="label">
+                <span className="label-text">IPv4</span>
+              </div>
+              <input type="text" placeholder="Type here" name="IPv4" className="input input-bordered w-full max-w-xs" onChange={handleChange} value={nodeData?.options?.IPv4 || ''} />
+            </label>
+          </section>
           <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
+              <button className="btn btn-ghost me-2" name="cancelBtn" onClick={handleSubmit}>Cancel</button>
+              <button className="btn" name="submitBtn" onClick={handleSubmit}>Save Changes</button>
             </form>
           </div>
         </div>
       </dialog>
     </>
-
   );
 }
