@@ -293,8 +293,8 @@ export default function Graph() {
 
     console.log(filterCheck)
 
-    let filterValue: any = []
-    let filtered: any = []
+    const filterValue: any = []
+    const filtered: any = []
 
     for (const key in filterCheck) {
       console.log(`${key}: ${filterCheck[key]}`)
