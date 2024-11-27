@@ -357,8 +357,8 @@ export default function Graph() {
                 ) : (<></>)}
               </label>
               <div className="indicator">
-                <span className="indicator-item badge badge-secondary">{countFilter()}</span>
-                <div className="dropdown dropdown-open">
+                <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
+                <div className="dropdown">
                   <div tabIndex={0} role="button" className="btn ms-2">Filter <Image src="/img/filter.svg" width={24} height={24} className="opacity-60" alt="Filter Search" /> </div>
                   <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                     <li>
