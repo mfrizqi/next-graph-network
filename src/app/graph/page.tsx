@@ -235,7 +235,11 @@ export default function Graph() {
   }
 
   function openFullscreen() {
-    const elem = document.documentElement;
+    const elem = document.documentElement as HTMLElement & {
+      mozRequestFullScreen(): Promise<void>;
+      webkitRequestFullscreen(): Promise<void>;
+      msRequestFullscreen(): Promise<void>;
+    };
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
     } else if (elem?.webkitRequestFullscreen) { /* Safari */
