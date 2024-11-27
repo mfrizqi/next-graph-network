@@ -1,0 +1,129 @@
+
+div.vis-network div.vis-navigation div.vis-button.vis-up,
+div.vis-network div.vis-navigation div.vis-button.vis-down,
+div.vis-network div.vis-navigation div.vis-button.vis-left,
+div.vis-network div.vis-navigation div.vis-button.vis-right,
+div.vis-network div.vis-navigation div.vis-button.vis-zoomIn,
+div.vis-network div.vis-navigation div.vis-button.vis-zoomOut,
+div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+  background-image: none !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button:hover {
+  box-shadow: none !important;
+}
+
+.vis-button:after {
+  font-size: 2em;
+  color: gray;
+}
+
+.vis-button:hover:after {
+  font-size: 2em;
+  color: lightgray;
+}
+
+.vis-button.vis-up:after {
+  content: "▲";
+}
+
+.vis-button.vis-down:after {
+  content: "▼";
+}
+
+.vis-button.vis-left:after {
+  content: "◀";
+}
+
+.vis-button.vis-right:after {
+  content: "▶";
+}
+
+.vis-button.vis-zoomIn:after {
+  content: "+";
+  font-weight: bold;
+}
+
+.vis-button.vis-zoomOut:after {
+  content: "−";
+  font-weight: bold;
+}
+
+.vis-button.vis-zoomExtends:after {
+  content: "⤧";
+}
+
+/* .vis-button.vis-zoomIn:after {
+  content: "+";
+  font-weight: bold;
+}
+
+.vis-button.vis-zoomOut:after {
+  content: "−";
+  font-weight: bold;
+}
+
+.vis-button.vis-zoomExtends:after {
+  content: "⤧";
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
+  top: 10px !important;
+  right: -140px !important;
+  bottom: 0 !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
+  top: 10px !important;
+  right: -110px !important;
+  bottom: 0 !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+  top: 10px;
+  right: -175px;
+} */
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
+  bottom: 10px !important;
+  right: 80px !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
+  bottom: 10px !important;
+  right: 47px !important;
+}
+
+div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
+  bottom: 12px !important;
+  right: 12px !important;
+}
+
+.vis-close {
+  display: block;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 32px;
+  width: 32px;
+  /* background-color: cyan; */
+}
+
+.vis-close:after {
+  content: "X";
+}
+
+div.vis-network div.vis-edit-mode {
+  position: absolute;
+  left: 0;
+  top: 16px !important;
+  height: 30px;
+}
+
+div.vis-network div.vis-edit-mode:after {
+  content: "✎"
+}
