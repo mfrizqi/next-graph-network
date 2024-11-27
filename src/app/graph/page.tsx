@@ -15,7 +15,7 @@ export default function Graph() {
   const [networks, setNetworks] = useState<any>({})
   const [nodes, setNodes] = useState<any[]>([])
   const [edges, setEdges] = useState([])
-  const [filteredEdges, setFilteredEdges] = useState<any>([])
+  // const [filteredEdges, setFilteredEdges] = useState<any>([])
   const [selectedNode, setSelectedNode] = useState<any>({})
   const [nodeData, setNodeData] = useState<any>({})
 
