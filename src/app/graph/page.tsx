@@ -4,6 +4,7 @@ import { Network } from "vis-network";
 
 import graphOptions from "./graphOption";
 import useDebounce from './useDebounce';
+import Image from "next/image";
 
 export default function Graph() {
 
@@ -296,15 +297,14 @@ export default function Graph() {
           <div className="relative my-4">
             <section className="flex items-top">
               <label className="input input-bordered flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4">
-                {/* <img src="/img/search.svg" width={32} height={32} className="opacity-60" /> */}
                 <input type="text" className="grow" placeholder="Search node" value={search || ''}
                   onChange={handleSearch} />
                 {search !== '' ? (
-                  <img src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} />
+                  <Image  src="/img/x.svg" width={32} height={32} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
                 ) : (<></>)}
               </label>
               <div className="dropdown">
-                <div tabIndex={0} role="button" className="btn ms-2">Filter <img src="/img/filter.svg" width={24} height={24} className="opacity-60" /> </div>
+                <div tabIndex={0} role="button" className="btn ms-2">Filter <Image src="/img/filter.svg" width={24} height={24} className="opacity-60" alt="Filter Search" /> </div>
                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
                   <li><a>Gateway</a></li>
                   <li><a>VPN</a></li>
