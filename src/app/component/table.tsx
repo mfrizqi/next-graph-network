@@ -11,11 +11,11 @@ export default function Table({ dataTable }: any) {
             <table className="table px-4">
               {/* head */}
               <thead className="text-slate-600">
-                <tr>
-                  <th>No</th>
-                  <th>Node Name</th>
-                  <th>IPv4</th>
-                  <th>Group</th>
+                <tr className="bg-slate-300">
+                  <th className="text-base rounded-tl-lg">No</th>
+                  <th className="text-base">Node Name</th>
+                  <th className="text-base">IPv4</th>
+                  <th className="text-base rounded-tr-lg">Group</th>
                 </tr>
               </thead>
               <tbody>
