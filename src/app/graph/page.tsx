@@ -7,6 +7,8 @@ import useDebounce from './useDebounce';
 import Image from "next/image";
 
 import Loading from "../component/loading";
+import Table from "../component/table";
+import Stats from "../component/stats";
 
 
 export default function Graph() {
@@ -347,6 +349,11 @@ export default function Graph() {
     return count;
   }
 
+  const countGroup: any = () => {
+    return originNodes
+      .reduce((acc, { group }) => ({ ...acc, [group]: (acc[group] || 0) + 1 }), {});
+  }
+
   return (
     <>
       <div className="p-6 md:p-10">
@@ -354,15 +361,6 @@ export default function Graph() {
           <h1 className="text-xl font-semibold" style={{ color: '#6a39df' }}>Network Graph</h1>
           <p className="text-slate-600">An overview network graph - Gateway & VPN</p>
         </div>
-        {/* Toast Component */}
-        {notification.show ? (
-          <div className="toast toast-top toast-end z-10">
-            <div className={`alert ${notification.status}`}>
-              <span className={`${notification.status === 'alert-error' ? 'text-white' : 'text-black'}`}>{notification.message}</span>
-            </div>
-          </div>) :
-          (<></>)
-        }
 
         {/* Network Graph Content */}
 
@@ -371,53 +369,67 @@ export default function Graph() {
         ) : (
           <>
             {!errorFetch ? (
-              <div className="relative mb-4">
-                {/* Search & Filter  */}
-                <section className="flex items-top">
-                  <label className="input flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4 border border-slate-500">
-                    <Image src="/img/search.svg" width={20} height={20} className="cursor-pointer opacity-75" alt="Search Icon" />
-                    <input type="text" className="grow" placeholder="Search label..." value={search || ''}
-                      onChange={handleSearch} />
-                    {search !== '' ? (
-                      <Image src="/img/x.svg" width={28} height={28} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
-                    ) : (<></>)}
-                  </label>
+              <>
+                <div className="relative mb-4">
+                  {/* Search & Filter  */}
+                  <section className="flex items-top">
+                    <label className="input flex items-center gap-2 w-full md:w-4/12 lg:w-1/4 mb-4 border border-slate-500">
+                      <Image src="/img/search.svg" width={20} height={20} className="cursor-pointer opacity-75" alt="Search Icon" />
+                      <input type="text" className="grow" placeholder="Search label..." value={search || ''}
+                        onChange={handleSearch} />
+                      {search !== '' ? (
+                        <Image src="/img/x.svg" width={28} height={28} className="cursor-pointer opacity-75" onClick={deleteSearch} alt="Delete Search" />
+                      ) : (<></>)}
+                    </label>
 
-                  {/* Filter Dropdown */}
-                  <div className="indicator">
-                    <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
-                    <div className="dropdown dropdown-bottom dropdown-end">
-                      <div tabIndex={0} role="button" className="btn ms-4">
-                        <span className="font-medium md:block hidden">Filter</span>
-                        <img src="/img/filter.svg" className="opacity-60 w-8 md:w-5" alt="Filter Search" /> </div>
-                      <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-slate-300">
-                        <div className="p-2 font-semibold">Group By: </div>
-                        <li>
-                          <div>
-                            <label className="label cursor-pointer">
-                              <input type="checkbox" className="checkbox me-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
-                              <span className="label-text">Gateway</span>
-                            </label>
-                          </div>
-                          <div>
-                            <label className="label cursor-pointer">
-                              <input type="checkbox" className="checkbox me-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
-                              <span className="label-text">VPN</span>
-                            </label>
-                          </div>
-                        </li>
-                      </ul>
+                    {/* Filter Dropdown */}
+                    <div className="indicator">
+                      <span className={`indicator-item badge badge-secondary ${countFilter() > 0 ? 'opacity-100' : 'opacity-0'}`}>{countFilter()}</span>
+                      <div className="dropdown dropdown-bottom dropdown-end">
+                        <div tabIndex={0} role="button" className="btn ms-4">
+                          <span className="font-medium md:block hidden">Filter</span>
+                          <img src="/img/filter.svg" className="opacity-60 w-8 md:w-5" alt="Filter Search" /> </div>
+                        <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow border border-slate-300">
+                          <div className="p-2 font-semibold">Group By: </div>
+                          <li>
+                            <div>
+                              <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox me-4" name="gateway" onChange={handleChangeFilter} value={filterCheck.gateway} checked={filterCheck.gateway} />
+                                <span className="label-text">Gateway</span>
+                              </label>
+                            </div>
+                            <div>
+                              <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox me-4" name="vpn" onChange={handleChangeFilter} value={filterCheck.vpn} checked={filterCheck.vpn} />
+                                <span className="label-text">VPN</span>
+                              </label>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
+
+                  </section>
+
+                  <div id="networkGraph" className="border-2 border-slate-400 rounded-md shadow-lg" style={{ backgroundColor: '#1a1a1a', height: '80vh' }} ref={NetworkRef}>
+                  </div>
+                  <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100 lg:block hidden" style={{ bottom: '12px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
+                    &#x26F6;
+                  </div>
+                </div>
+
+                <section>
+                  <div className="p-4 mt-8 mb-4 bg-gray-200 w-full md:w-1/2 rounded-lg">
+                    <h1 className="text-xl font-semibold" style={{ color: '#6a39df' }}>Network Statistics</h1>
+                    <p className="text-slate-600">An overview network statistics</p>
                   </div>
 
+                  <Stats statsData={countGroup()}></Stats>
+                  <Table dataTable={originNodes}></Table>
                 </section>
 
-                <div id="networkGraph" className="border-2 border-slate-400 rounded-md" style={{ backgroundColor: '#1a1a1a', height: '80vh' }} ref={NetworkRef}>
-                </div>
-                <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100 lg:block hidden" style={{ bottom: '12px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
-                  &#x26F6;
-                </div>
-              </div>
+              </>
+
             ) : (
               <section className="border-2 border-slate-500 bg-zinc-600 rounded-md text-gray-500 flex justify-center items-center bg-zinc-900" style={{ height: '80vh' }}>
                 <div className="text-center">
@@ -430,6 +442,17 @@ export default function Graph() {
           </>
         )}
       </div>
+
+      {/* Toast Component */}
+      {notification.show ? (
+        <div className="toast toast-top toast-end z-10">
+          <div className={`alert ${notification.status}`}>
+            <span className={`${notification.status === 'alert-error' ? 'text-white' : 'text-black'}`}>{notification.message}</span>
+          </div>
+        </div>) :
+        (<></>)
+      }
+
       {/* Modal Component */}
       <dialog id="modal_box" className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
