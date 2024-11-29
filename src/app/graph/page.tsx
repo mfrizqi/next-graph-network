@@ -357,8 +357,8 @@ export default function Graph() {
   return (
     <>
       <div className="p-6 md:p-10">
-        <div className="p-4 mb-4 bg-gray-200 w-full md:w-1/2 rounded-lg">
-          <h1 className="text-xl font-semibold" style={{ color: '#6a39df' }}>Network Graph</h1>
+        <div className="p-4 mb-8 bg-gray-200 w-full md:w-1/2 rounded-lg">
+          <h1 className="text-2xl font-semibold mb-2" style={{ color: '#6a39df' }}>Network Graph</h1>
           <p className="text-slate-600">An overview network graph - Gateway & VPN</p>
         </div>
 
@@ -419,12 +419,16 @@ export default function Graph() {
                 </div>
 
                 <section>
-                  <div className="p-4 mt-8 mb-4 bg-gray-200 w-full md:w-1/2 rounded-lg">
-                    <h1 className="text-xl font-semibold" style={{ color: '#6a39df' }}>Network Statistics</h1>
+                  <div className="p-4 mt-8 mb-8 bg-gray-200 w-full md:w-1/2 rounded-lg">
+                    <h1 className="text-2xl font-semibold mb-2" style={{ color: '#6a39df' }}>Network Statistics</h1>
                     <p className="text-slate-600">An overview network statistics</p>
                   </div>
+                  
 
+                  <h1 className="text-xl font-semibold text-neutral-200 mb-2">Groups</h1>
                   <Stats statsData={countGroup()}></Stats>
+
+                  <h1 className="text-xl font-semibold text-neutral-200 mt-4 mb-2">Network Data</h1>
                   <Table dataTable={originNodes}></Table>
                 </section>
 
