@@ -31,7 +31,7 @@ const graphOptions = {
     },
     vpn: {
       shape: "dot",
-      color: "#2555d9",
+      color: "#FF9B71",
       size: 20
     },
   },

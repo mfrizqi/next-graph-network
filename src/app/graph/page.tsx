@@ -411,7 +411,7 @@ export default function Graph() {
 
                   </section>
 
-                  <div id="networkGraph" className="border-2 border-slate-400 rounded-md shadow-lg" style={{ backgroundColor: '#1a1a1a', height: '80vh' }} ref={NetworkRef}>
+                  <div id="networkGraph" className="border-2 border-slate-400 rounded-md shadow-lg" style={{ backgroundColor: '#1A1E2B', height: '80vh' }} ref={NetworkRef}>
                   </div>
                   <div className="absolute font-bold hover:cursor-pointer opacity-75 hover:opacity-100 lg:block hidden" style={{ bottom: '12px', right: '134px', fontSize: "18px" }} onClick={openFullscreen}>
                     &#x26F6;
