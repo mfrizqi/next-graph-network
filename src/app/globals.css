@@ -4,12 +4,30 @@
 
 body {
   color: var(--foreground);
-  
-  background: rgb(106, 57, 223);
+
+  /* background: rgb(106, 57, 223);
   background: -moz-linear-gradient(166deg, rgba(106, 57, 223, 1) 0%, rgba(69, 22, 115, 1) 100%);
   background: -webkit-linear-gradient(166deg, rgba(106, 57, 223, 1) 0%, rgba(69, 22, 115, 1) 100%);
   background: linear-gradient(166deg, rgba(106, 57, 223, 1) 0%, rgba(69, 22, 115, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#6a39df", endColorstr="#451673", GradientType=1);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#6a39df", endColorstr="#451673", GradientType=1); */
+
+  background: rgb(132, 80, 255);
+  background: -moz-linear-gradient(
+    90deg,
+    rgba(132, 80, 255, 1) 0%,
+    rgba(85, 0, 255, 1) 100%
+  );
+  background: -webkit-linear-gradient(
+    90deg,
+    rgba(132, 80, 255, 1) 0%,
+    rgba(85, 0, 255, 1) 100%
+  );
+  background: linear-gradient(
+    90deg,
+    rgba(132, 80, 255, 1) 0%,
+    rgba(85, 0, 255, 1) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#8450ff",endColorstr="#5500ff",GradientType=1);
 
   font-family: Arial, Helvetica, sans-serif;
 }
