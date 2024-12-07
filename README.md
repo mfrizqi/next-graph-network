@@ -2,7 +2,7 @@
 
 # Graph Networks using Vis Network in Next.js
 
-This repository is about a graph network using [Vis Network](https://visjs.github.io/vis-network/docs/network/) implemented in [Next.js](https://nextjs.org/).
+This repository is about a graph network using [Vis Network](https://visjs.github.io/vis-network/docs/network/) implemented in [Next.js](https://nextjs.org/) with typescript.
 
 Kindly visit the deployed site on vercel: [Graph Networks](https://next-graph-network.vercel.app/graph)
 
